@@ -3,17 +3,17 @@ package com.mitsw.filelistener;
 import android.os.FileObserver;
 import android.util.Log;
 
+import com.mitsw.service.FileListenerService;
+
 /**
  * Created by Hill on 15/8/26.
  */
 public class BaseFileObserver extends FileObserver {
 
-    //http://rswiki.csie.org/lxr/http/source/include/linux/inotify.h?a=m68k#L45
-
     public static final int CREATE_DIR = 1073742080;
     public static final int DELETE_DIR = 1073741840;
 
-    protected static final String TAG = "BaseFileObserver";
+    protected static final String TAG = FileListenerService.TAG;
 
     public BaseFileObserver(String path, int mask) {
         super(path, mask);

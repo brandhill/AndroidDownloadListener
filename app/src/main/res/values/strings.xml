@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">AndroidDownloadListener</string>
+    <string name="app_name">File Listener</string>
 
     <string name="hello_world">Hello world!</string>
     <string name="main_screen_app_decription">DownloadListener</string>

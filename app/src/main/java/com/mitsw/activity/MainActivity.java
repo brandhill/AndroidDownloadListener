@@ -16,15 +16,19 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
-import com.mitsw.util.log.DebugMode;
-import com.mitsw.filelistener.RecursiveFileObserver;
 import com.mitsw.download.listener.DownloadObserver;
 import com.mitsw.download.listener.Downloads;
+import com.mitsw.util.log.DebugMode;
 
 public class MainActivity extends AppCompatActivity {
 
 
-    private final static String DOWNLOAD_URL = "http://img.meilishuo.net/css/images/AndroidShare/Meilishuo_3.6.1_10006.apk";
+    //private final static String DOWNLOAD_URL = "http://img.meilishuo.net/css/images/AndroidShare/Meilishuo_3.6.1_10006.apk";
+
+    private final static String DOWNLOAD_URL ="https://drive.google.com/uc?export=download&id=0B4EUMVYZzs_HdHdUZmxHS2RfQ28"; // file size : 1 mb
+//    private final static String DOWNLOAD_URL ="https://drive.google.com/uc?export=download&id=0B4EUMVYZzs_HS0VEeDJ6OHlhdFU"; // file size : 10 mb
+//    private final static String DOWNLOAD_URL = "https://drive.google.com/uc?export=download&id=0B4EUMVYZzs_HTzc3RUE0U1JwNFU"; // file size : 20 mb
+
     private long mDownloadId = -1;
 
     public static final String COLUMN_ID = "_id";
@@ -38,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
 
     private FileObserver mFileObserver;
     private DownloadObserver mDownloadObserver;
-    private final boolean mIsFileObserverEnable = false;
+    private final boolean mIsFileObserverEnable = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,11 +55,9 @@ public class MainActivity extends AppCompatActivity {
                 new Thread() {
                     @Override
                     public void run() {
-                        //startDownload();
-
                         startDownload();
 
-                        queryDownloadProvider();
+                        //queryDownloadProvider();
 
                     }
                 }.start();
@@ -68,17 +70,14 @@ public class MainActivity extends AppCompatActivity {
                 if (null != mDownloadObserver) {
                     mDownloadObserver.stopDownloadObserver();
                     mDownloadObserver = null;
-                    ((Button)view).setText("Start DownloadObserver");
+                    ((Button) view).setText("Start DownloadObserver");
                 } else {
                     mDownloadObserver = new DownloadObserver(getApplicationContext());
                     mDownloadObserver.startDownloadObserver();
-                    ((Button)view).setText("Stop DownloadObserver");
+                    ((Button) view).setText("Stop DownloadObserver");
                 }
             }
         });
-
-
-        if(mIsFileObserverEnable) startFileObserver();
 
     }
 
@@ -117,8 +116,9 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (null != mDownloadObserver) mDownloadObserver.stopDownloadObserver();
-        stopFileObserver();
+        if (null != mDownloadObserver){
+            mDownloadObserver.stopDownloadObserver();
+        }
 
     }
 
@@ -166,18 +166,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private void startFileObserver(){
-        if(null == mFileObserver) {
-            mFileObserver = new RecursiveFileObserver("/sdcard", FileObserver.ALL_EVENTS);
-            mFileObserver.startWatching();
-        }
-    }
 
-    private void stopFileObserver(){
-        if(null != mFileObserver){
-            mFileObserver.stopWatching();
-        }
-    }
 
     private BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
