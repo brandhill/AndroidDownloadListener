@@ -2,17 +2,18 @@ package com.mitsw.service;
 
 import android.app.Service;
 import android.content.Intent;
-import android.os.FileObserver;
+import android.os.Environment;
 import android.os.IBinder;
 import android.util.Log;
 
-import com.mitsw.filelistener.RecursiveFileObserver;
+import com.mitsw.filelistener.BaseFileObserver;
+import com.mitsw.filelistener.FileListenerImpl;
 import com.mitsw.filelistener.SimpleFileObserver;
 
 public class FileListenerService extends Service {
 
     public final static String TAG = "FileListener";
-    private FileObserver mFileObserver;
+    private BaseFileObserver mFileObserver;
     public FileListenerService() {
     }
 
@@ -39,10 +40,12 @@ public class FileListenerService extends Service {
 
     private void startFileObserver(){
         if(null == mFileObserver) {
-            mFileObserver = new SimpleFileObserver("/sdcard", FileObserver.ALL_EVENTS);
+            String targetDirectory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath();
+            mFileObserver = new SimpleFileObserver(targetDirectory, BaseFileObserver.FILE_DOWNLOADING);
+            mFileObserver.setFileListener(new FileListenerImpl());
             mFileObserver.startWatching();
 
-            Log.i(TAG, "File listener is starting ...");
+            Log.i(TAG, "File listener is started, target directory : " + targetDirectory);
         }
     }
 
